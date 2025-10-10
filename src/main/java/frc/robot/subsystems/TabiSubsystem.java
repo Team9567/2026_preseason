@@ -4,27 +4,25 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
 import frc.robot.Constants.DriveTrainConstants;
 
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
-public class ExampleSubsystem extends SubsystemBase {
+public class TabiSubsystem extends SubsystemBase {
   SparkMax leftMotor = new SparkMax(DriveTrainConstants.kLeftMotorCanID, MotorType.kBrushless);
   SparkMax rightMotor = new SparkMax(DriveTrainConstants.kRightMotorCanID, MotorType.kBrushless);
   DifferentialDrive m_DifferentialDrive;
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {
+  public TabiSubsystem() {
     SparkMaxConfig config = new SparkMaxConfig();
       config
           .idleMode(IdleMode.kBrake)
