@@ -41,7 +41,7 @@ public class TabiSubsystem extends SubsystemBase {
       config.softLimit
           .forwardSoftLimitEnabled(false)
           .reverseSoftLimitEnabled(false);
-          config.inverted(true);
+      config.inverted(false);
       config.openLoopRampRate(0.25);
       //config.encoder.positionConversionFactor(ChassisConstants.kPositionConversionFactor);
       rightMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

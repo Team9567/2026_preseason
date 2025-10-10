@@ -53,8 +53,8 @@ public class RobotContainer {
     m_exampleSubsystem.setDefaultCommand(
       new RunCommand(
         () -> {
-          m_exampleSubsystem.arcadeDrive(m_driverController.getRawAxis(OperatorConstants.kControllerLeftVertical), 
-          m_driverController.getRawAxis(OperatorConstants.kControllerLeftHorizontal));
+          m_exampleSubsystem.arcadeDrive(-m_driverController.getRawAxis(OperatorConstants.kControllerLeftVertical), 
+          -m_driverController.getRawAxis(OperatorConstants.kControllerLeftHorizontal));
         }, m_exampleSubsystem)
     );
   }
