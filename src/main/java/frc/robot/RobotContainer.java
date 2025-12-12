@@ -6,10 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveToPoint;
+import frc.robot.commands.TurnCommand;
 import frc.robot.subsystems.TabiSubsystem;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;//CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -56,7 +61,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+        .onTrue(new TurnCommand(45, m_exampleSubsystem));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is
     // pressed,
@@ -67,6 +72,22 @@ public class RobotContainer {
         }
 
     ).withTimeout(2.0));
+    m_driverController.pov(OperatorConstants.kDriverControllerPOVRight).onTrue(new TurnCommand(45, m_exampleSubsystem));
+    m_driverController.pov(OperatorConstants.kDriverControllerPOVLeft).onTrue(new TurnCommand(-45, m_exampleSubsystem));
+    m_driverController.pov(OperatorConstants.kDriverControllerPOVUp).onTrue(new DriveCommand(0.5, m_exampleSubsystem));
+    m_driverController.pov(OperatorConstants.kDriverControllerPOVDown).onTrue(new DriveCommand(-0.5, m_exampleSubsystem));
+    // m_driverController.button(OperatorConstants.kDriverControllerB).onTrue(m_exampleSubsystem.driveDistance(2));
+    m_driverController.button(OperatorConstants.kDriverControllerB).onTrue(m_exampleSubsystem.runObstacleCourse());
+    m_driverController.button(OperatorConstants.kDriverControllerY).onTrue(new DriveToPoint(new Pose2d(1,0.5, new Rotation2d()), m_exampleSubsystem));
+    m_driverController.button(OperatorConstants.kDriverControllerX).onTrue(new DriveToPoint(new Pose2d(-1,-0.5, new Rotation2d()), m_exampleSubsystem));
+    // m_driverController.button(OperatorConstants.kDriverControllerA).onTrue(
+    //   Commands.sequence(
+    //     new DriveToPoint(new Pose2d(1, 0, new Rotation2d()), m_exampleSubsystem),
+    //     new DriveToPoint(new Pose2d(1, 1, new Rotation2d()), m_exampleSubsystem),
+    //     new DriveToPoint(new Pose2d(0, 1, new Rotation2d()), m_exampleSubsystem),
+    //     new DriveToPoint(new Pose2d(0, 0, new Rotation2d()), m_exampleSubsystem)
+    //   )  
+    // );
     m_exampleSubsystem.setDefaultCommand(
         new RunCommand(
             () -> {
@@ -77,7 +98,9 @@ public class RobotContainer {
               m_exampleSubsystem.arcadeDrive(-gamepadDrive, -gamepadTurn);
             }, m_exampleSubsystem));
   }
-
+  public void resetOdometry(){
+    m_exampleSubsystem.resetOdometry();
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
