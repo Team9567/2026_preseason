@@ -46,7 +46,7 @@ public class TurnCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      double rotation = -turnPid.calculate(m_subsystem.getAngle(), m_initialAngle + m_goalAngle);
+      double rotation = turnPid.calculate(m_subsystem.getAngle(), m_initialAngle + m_goalAngle);
       rotation = MathUtil.clamp(rotation, -0.25, 0.25);
       SmartDashboard.putNumber("orientation", m_subsystem.getAngle()); //gyro.getYaw() last
       SmartDashboard.putNumber("rotation", rotation);

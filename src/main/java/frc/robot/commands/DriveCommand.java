@@ -46,7 +46,7 @@ public class DriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      double speed = -drivePid.calculate(m_subsystem.getAverageDistance(), m_initialDistance + m_goalDistance);
+      double speed = drivePid.calculate(m_subsystem.getAverageDistance(), m_initialDistance + m_goalDistance);
       speed = MathUtil.clamp(speed, -0.25, 0.25);
       SmartDashboard.putNumber("distance", m_subsystem.getAverageDistance()); 
       SmartDashboard.putNumber("speed", speed);
