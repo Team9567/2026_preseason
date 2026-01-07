@@ -52,12 +52,19 @@ public class DriveToPoint extends Command {
     var distance = pose.getTranslation().minus(m_targetPose.getTranslation()).getNorm();
     var robotRotation = m_targetPose.relativeTo(pose).getTranslation().getAngle().getDegrees();
 
-    
-    double speed = drivePid.calculate(0, distance);
-    speed = MathUtil.clamp(speed, -0.40, 0.40);
-    if (Math.abs(robotRotation) > 15) {
-      speed = 0;
+    // Adjusting distance and rotation to allow driving backwards to a point behind the robot.
+    if (Math.abs(robotRotation) > 100) {
+      distance *= -1;
+      double angleSign = Math.signum(robotRotation);
+      robotRotation += 180 * angleSign * -1;
     }
+
+    double speed = 0;
+    if (Math.abs(robotRotation) < 15) {
+     speed = drivePid.calculate(0, distance);
+     speed = MathUtil.clamp(speed, -0.30, 0.30);
+    }
+
     double rotation = turnPid.calculate(0, robotRotation);
     rotation = MathUtil.clamp(rotation, -0.25, 0.25);
     SmartDashboard.putNumber("drive to point/speed", speed);
