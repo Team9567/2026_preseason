@@ -50,7 +50,7 @@ public class DriveCommand extends Command {
       speed = MathUtil.clamp(speed, -0.25, 0.25);
       SmartDashboard.putNumber("distance", m_subsystem.getAverageDistance()); 
       SmartDashboard.putNumber("speed", speed);
-      m_subsystem.arcadeDrive(speed, 0);
+      m_subsystem.arcadedrive(speed, 0);
   }
 
   // Called once the command ends or is interrupted.

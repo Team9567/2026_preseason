@@ -36,7 +36,7 @@ public class DriveToPoint extends Command {
   public void initialize() {
       drivePid.setTolerance(0.05);
       turnPid.setTolerance(3);
-      var pose = m_subsystem.getPose();
+      var pose = m_subsystem.getEstimatedPosition();
       var theta = Math.atan((m_targetPose.getY()-pose.getY())/(m_targetPose.getX()-pose.getX()));
       var degrees = theta*(Math.PI/180);
       m_targetPose = new Pose2d(m_targetPose.getX(),m_targetPose.getY(),new Rotation2d(degrees));
@@ -48,7 +48,7 @@ public class DriveToPoint extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var pose = m_subsystem.getPose();
+    var pose = m_subsystem.getEstimatedPosition();
     var distance = pose.getTranslation().minus(m_targetPose.getTranslation()).getNorm();
     var robotRotation = m_targetPose.relativeTo(pose).getTranslation().getAngle().getDegrees();
 
@@ -71,7 +71,7 @@ public class DriveToPoint extends Command {
     SmartDashboard.putNumber("drive to point/distance", distance);
     SmartDashboard.putNumber("drive to point/robot rotation", robotRotation);
     SmartDashboard.putNumber("drive to point/rotation", rotation);
-    m_subsystem.arcadeDrive(speed, rotation);
+    m_subsystem.arcadedrive(speed, rotation);
   }
 
   // Called once the command ends or is interrupted.

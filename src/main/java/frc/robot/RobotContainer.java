@@ -12,12 +12,10 @@ import frc.robot.commands.TurnCommand;
 import frc.robot.subsystems.TabiSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;//CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -31,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final TabiSubsystem m_exampleSubsystem = new TabiSubsystem();
+  private final TabiSubsystem m_tabiSubsystem = new TabiSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandGenericHID m_driverController = new CommandGenericHID(OperatorConstants.kDriverControllerPort);
@@ -42,6 +40,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+  }
+
+  public void resetDriveTrain() {
+    m_tabiSubsystem.reset();
   }
 
   /**
@@ -59,48 +61,16 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new TurnCommand(45, m_exampleSubsystem));
+    m_tabiSubsystem.setDefaultCommand(new RunCommand(() -> {
+      m_tabiSubsystem.arcadedrive(-m_driverController.getRawAxis(OperatorConstants.kControllerLeftVertical),
+          m_driverController.getRawAxis(OperatorConstants.kControllerLeftHorizontal));
+    }, m_tabiSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
-    m_driverController.button(OperatorConstants.kDriverControllerA).whileTrue(m_exampleSubsystem.run(
-        () -> {
-          m_exampleSubsystem.arcadeDrive(0.15, 0);
-        }
+    m_driverController.button(OperatorConstants.kDriverControllerA).onTrue(new TurnCommand(25, m_tabiSubsystem));
+    m_driverController.button(OperatorConstants.kDriverControllerX).onTrue(new DriveCommand(0.5, m_tabiSubsystem));
+    m_driverController.button(OperatorConstants.kDriverControllerB).onTrue(new DriveCommand(2, m_tabiSubsystem).andThen(new TurnCommand(360, m_tabiSubsystem)));
+    }
 
-    ).withTimeout(2.0));
-    m_driverController.pov(OperatorConstants.kDriverControllerPOVRight).onTrue(new TurnCommand(45, m_exampleSubsystem));
-    m_driverController.pov(OperatorConstants.kDriverControllerPOVLeft).onTrue(new TurnCommand(-45, m_exampleSubsystem));
-    m_driverController.pov(OperatorConstants.kDriverControllerPOVUp).onTrue(new DriveCommand(0.5, m_exampleSubsystem));
-    m_driverController.pov(OperatorConstants.kDriverControllerPOVDown).onTrue(new DriveCommand(-0.5, m_exampleSubsystem));
-    // m_driverController.button(OperatorConstants.kDriverControllerB).onTrue(m_exampleSubsystem.driveDistance(2));
-    m_driverController.button(OperatorConstants.kDriverControllerB).onTrue(m_exampleSubsystem.runObstacleCourse());
-    m_driverController.button(OperatorConstants.kDriverControllerY).onTrue(new DriveToPoint(new Pose2d(1,0.5, new Rotation2d()), m_exampleSubsystem));
-    m_driverController.button(OperatorConstants.kDriverControllerX).onTrue(new DriveToPoint(new Pose2d(-1,-0.5, new Rotation2d()), m_exampleSubsystem));
-    // m_driverController.button(OperatorConstants.kDriverControllerA).onTrue(
-    //   Commands.sequence(
-    //     new DriveToPoint(new Pose2d(1, 0, new Rotation2d()), m_exampleSubsystem),
-    //     new DriveToPoint(new Pose2d(1, 1, new Rotation2d()), m_exampleSubsystem),
-    //     new DriveToPoint(new Pose2d(0, 1, new Rotation2d()), m_exampleSubsystem),
-    //     new DriveToPoint(new Pose2d(0, 0, new Rotation2d()), m_exampleSubsystem)
-    //   )  
-    // );
-    m_exampleSubsystem.setDefaultCommand(
-        new RunCommand(
-            () -> {
-              double gamepadDrive = m_driverController.getRawAxis(OperatorConstants.kControllerLeftVertical);
-              double gamepadTurn = m_driverController.getRawAxis(OperatorConstants.kControllerLeftHorizontal);
-              SmartDashboard.putNumber("gamepadDrive", gamepadDrive);
-              SmartDashboard.putNumber("gamepadTurn", gamepadTurn);
-              m_exampleSubsystem.arcadeDrive(-gamepadDrive, -gamepadTurn);
-            }, m_exampleSubsystem));
-  }
-  public void resetOdometry(){
-    m_exampleSubsystem.resetOdometry();
-  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -108,6 +78,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return Autos.exampleAuto(m_tabiSubsystem);
   }
 }

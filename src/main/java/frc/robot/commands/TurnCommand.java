@@ -50,7 +50,7 @@ public class TurnCommand extends Command {
       rotation = MathUtil.clamp(rotation, -0.25, 0.25);
       SmartDashboard.putNumber("orientation", m_subsystem.getAngle()); //gyro.getYaw() last
       SmartDashboard.putNumber("rotation", rotation);
-      m_subsystem.arcadeDrive(0, rotation);
+      m_subsystem.arcadedrive(0, rotation);
   }
 
   // Called once the command ends or is interrupted.
