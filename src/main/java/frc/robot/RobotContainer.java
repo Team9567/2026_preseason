@@ -4,16 +4,18 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.DriveCommand;
-import frc.robot.commands.TurnCommand;
-import frc.robot.subsystems.TabiSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.TurnCommand;
+import frc.robot.subsystems.TabiSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -27,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final TabiSubsystem m_tabiSubsystem = new TabiSubsystem();
+  SendableChooser<Command> autochooser = new SendableChooser<>();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandGenericHID m_driverController = new CommandGenericHID(OperatorConstants.kDriverControllerPort);
@@ -37,6 +40,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    autochooser.addOption("nothing", Commands.none());
+    SmartDashboard.putData("AutoPosition", autochooser);
   }
 
   public void resetDriveTrain() {
@@ -61,7 +66,7 @@ public class RobotContainer {
   private void configureBindings() {
     m_tabiSubsystem.setDefaultCommand(new RunCommand(() -> {
       m_tabiSubsystem.arcadedrive(-m_driverController.getRawAxis(OperatorConstants.kControllerLeftVertical),
-          m_driverController.getRawAxis(OperatorConstants.kControllerLeftHorizontal));
+          m_driverController.getRawAxis(OperatorConstants.kControllerRightHorizontal));
     }, m_tabiSubsystem));
 
     m_driverController.button(OperatorConstants.kDriverControllerA).onTrue(new TurnCommand(25, m_tabiSubsystem));
@@ -80,6 +85,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_tabiSubsystem);
+   
+    return autochooser.getSelected();
   }
 }
