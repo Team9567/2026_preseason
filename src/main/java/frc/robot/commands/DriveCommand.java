@@ -17,7 +17,7 @@ public class DriveCommand extends Command {
   private double m_initialDistance = 0.0;
   private double m_goalDistance = 0.0;
 
-  PIDController drivePid = new PIDController(2.0, 0, 0);
+  PIDController drivePid = new PIDController(3.0, 0, 0);
 
   /**
    * Creates a new ExampleCommand.
@@ -30,7 +30,7 @@ public class DriveCommand extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
 
-    drivePid.setTolerance(2);
+    drivePid.setTolerance(0.05);
   }
 
   // Called when the command is initially scheduled.
