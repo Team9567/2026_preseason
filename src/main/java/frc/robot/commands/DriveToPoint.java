@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class DriveToPoint extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final TabiSubsystem m_subsystem;
-  private double m_initialDistance = 0.0;
+  //private double m_initialDistance = 0.0;
   private Pose2d m_targetPose;
   PIDController drivePid = new PIDController(7.5, 0, 0.15);
   PIDController turnPid = new PIDController(0.1, 0, 0.01);

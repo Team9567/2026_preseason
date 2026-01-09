@@ -7,15 +7,12 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.TurnCommand;
 import frc.robot.subsystems.TabiSubsystem;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -60,6 +57,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
   private void configureBindings() {
     m_tabiSubsystem.setDefaultCommand(new RunCommand(() -> {
       m_tabiSubsystem.arcadedrive(-m_driverController.getRawAxis(OperatorConstants.kControllerLeftVertical),
@@ -69,7 +67,11 @@ public class RobotContainer {
     m_driverController.button(OperatorConstants.kDriverControllerA).onTrue(new TurnCommand(25, m_tabiSubsystem));
     m_driverController.button(OperatorConstants.kDriverControllerX).onTrue(new DriveCommand(0.5, m_tabiSubsystem));
     m_driverController.button(OperatorConstants.kDriverControllerB).onTrue(new DriveCommand(2, m_tabiSubsystem).andThen(new TurnCommand(360, m_tabiSubsystem)));
+    Trigger lowGear = m_driverController.button(OperatorConstants.kDriverControllerY);
+    m_tabiSubsystem.setGearTrigger(lowGear);
+    // Passes the trigger from RobotContainer to TabiSubsystem, binds the function to Y
     }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

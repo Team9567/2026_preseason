@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meter;
-import static edu.wpi.first.units.Units.Meters;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean

@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
+import java.util.Optional;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -27,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveTrainConstants;
 
 
@@ -35,6 +38,9 @@ public class TabiSubsystem extends SubsystemBase {
   SparkMax rightMotor = new SparkMax(DriveTrainConstants.kRightMotorCanID, MotorType.kBrushless);
   DifferentialDrive drivetrain;
   double targetMeters = 0;
+
+  Optional<Trigger> lowGearTrigger;
+  // Makes the trigger for the low gear function
 
   AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
   public Field2d field = new Field2d();
@@ -81,8 +87,20 @@ PIDController turnpid = new PIDController(0.05, 0, 0.005);
     odometry.resetPose(new Pose2d(0, 0, new Rotation2d()));
   }
 
+  public void setGearTrigger(Trigger t) {
+    lowGearTrigger = Optional.of(t);
+    // Sets t to a trigger and sending it to RobotContainer
+  }
+
   public void arcadedrive(double speed, double turn){
+    if (lowGearTrigger.isPresent()) {
+      if (lowGearTrigger.get().getAsBoolean()) {
+        speed /= 4;
+        turn /= 4;
+      }
+    }
     drivetrain.arcadeDrive(speed, turn);
+    // The mathematics for the high/low gear and ArcadeDrive
   }
 
 public double getAngle() {
